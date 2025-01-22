@@ -8,5 +8,5 @@ urlpatterns = [
     path('user-login/', views.userLogin, name='userLogin'),
     path('test-token/',views.testToken,name="testToken"),
     path('user-update/',views.userUpdate,name="userUpdate"),
-    path('user-delete/<str:pk>',views.userDelete,name="userDelete"),
+    path('user-delete/<str:pk>/',views.userDelete,name="userDelete"),
 ]
