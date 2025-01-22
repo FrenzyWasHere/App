@@ -79,4 +79,4 @@ def userUpdate(request, pk):
 def userDelete(request, pk):
     user = get_object_or_404(User, id=pk )
     user.delete()
-    return Response({"details":"deleted successfully :".format(request.user.username)},status=status.HTTP_204_NO_CONTENT)
+    return Response({"details":"deleted successfully :"},status=status.HTTP_204_NO_CONTENT)
