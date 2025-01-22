@@ -16,7 +16,9 @@ def apiOverview(request):
         {'desc':'create a new user',
          'url':'/user-create/'},
         {'desc':'login a user',
-         'url':'/user-login/'}
+         'url':'/user-login/'},
+        {'desc':'test token authentication',
+         'url':'/test-token/'}
     ]
     return Response(api_urls)
 
