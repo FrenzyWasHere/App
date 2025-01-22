@@ -18,7 +18,12 @@ def apiOverview(request):
         {'desc':'login a user',
          'url':'/user-login/'},
         {'desc':'test token authentication',
-         'url':'/test-token/'}
+         'url':'/test-token/'},
+        {'desc':'update an existing user',
+         'url':'/user-update/<str:pk>/'},
+        {'desc':'delete an existing user',
+         'url':'/user-delete/<str:pk>/'}
+        
     ]
     return Response(api_urls)
 
@@ -54,3 +59,24 @@ def userLogin(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 def testToken(request):
     return Response("passed for {}".format(request.user.email))
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def userUpdate(request, pk):
+    user = get_object_or_404(User, id=pk)
+    serializer = UserSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"user":serializer.data})
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def userDelete(request, pk):
+    user = get_object_or_404(User, id=pk )
+    user.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
