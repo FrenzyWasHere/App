@@ -9,4 +9,5 @@ urlpatterns = [
     path('test-token/',views.testToken,name="testToken"),
     path('user-update/<str:pk>/',views.userUpdate,name="userUpdate"),
     path('user-delete/<str:pk>/',views.userDelete,name="userDelete"),
+    path('doctors/',views.getDoctors,name="userDoctors"),
 ]

@@ -85,7 +85,7 @@ def userDelete(request, pk):
     return Response({"details":"deleted successfully :"},status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def getDoctor(request):
+def getDoctors(request):
     doctors = Doctor.objects.all()
     serializer = DoctorSerializer(doctors, many = True)
     return Response(serializer.data)
