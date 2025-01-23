@@ -72,9 +72,9 @@ def userUpdate(request, pk):
     serializer = UserSerializer(user, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        user = User.objects.get(username = request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
+        if 'password' in request.data:
+            user.set_password(request.data['password'])
+            user.save()
         return Response({"user":serializer.data})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
