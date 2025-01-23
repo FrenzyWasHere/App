@@ -25,7 +25,7 @@ def apiOverview(request):
         {'desc':'delete an existing user',
          'url':'/user-delete/<str:pk>/'},
         {'desc':'get the list of all doctors',
-         'url':'/doctor-list/'},
+         'url':'/doctors/'},
         
     ]
     return Response(api_urls)
