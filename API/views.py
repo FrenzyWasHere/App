@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import User
-from .serializers import UserSerializer
+from .models import Doctor
+from django.contrib.auth.models import User
+from .serializers import UserSerializer, DoctorSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from django.shortcuts import get_object_or_404
@@ -22,7 +23,9 @@ def apiOverview(request):
         {'desc':'update an existing user',
          'url':'/user-update/<str:pk>/'},
         {'desc':'delete an existing user',
-         'url':'/user-delete/<str:pk>/'}
+         'url':'/user-delete/<str:pk>/'},
+        {'desc':'get the list of all doctors',
+         'url':'/doctor-list/'},
         
     ]
     return Response(api_urls)
@@ -80,3 +83,9 @@ def userDelete(request, pk):
     user = get_object_or_404(User, id=pk )
     user.delete()
     return Response({"details":"deleted successfully :"},status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def getDoctor(request):
+    doctors = Doctor.objects.all()
+    serializer = DoctorSerializer(doctors, many = True)
+    return Response(serializer.data)
