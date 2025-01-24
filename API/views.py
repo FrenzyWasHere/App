@@ -118,7 +118,7 @@ def createAppointment(request):
 def listAppointments(request):
     appointments = Appointment.objects.all()
     serializer = AppointmentSerializer(appointments, many=True)
-    return Response(serializer.data, safe=False)
+    return Response(serializer.data)
 
 # Retrieve a specific appointment by ID
 @api_view(['GET'])
