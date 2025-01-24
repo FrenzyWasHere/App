@@ -118,7 +118,7 @@ def createAppointment(request):
 def listAppointments(request):
     appointments = Appointment.objects.all()
     serializer = AppointmentSerializer(appointments, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    return Response(serializer.data, safe=False)
 
 # Retrieve a specific appointment by ID
 @api_view(['GET'])
@@ -126,11 +126,11 @@ def getAppointment(request, appointment_id):
     try:
         appointment = Appointment.objects.get(appointmentId=appointment_id)
     except Appointment.DoesNotExist:
-        return JsonResponse({'error': 'Appointment not found'}, status=404)
+        return Response({'error': 'Appointment not found'}, status=404)
 
     if request.method == 'GET':
         serializer = AppointmentSerializer(appointment)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
 # Update an existing appointment
 @api_view(['PUT'])
@@ -140,15 +140,15 @@ def updateAppointment(request, appointment_id):
     try:
         appointment = Appointment.objects.get(appointmentId=appointment_id)
     except Appointment.DoesNotExist:
-        return JsonResponse({'error': 'Appointment not found'}, status=404)
+        return Response({'error': 'Appointment not found'}, status=404)
 
     if request.method == 'PUT':
         data = JSONParser().parse(request)
         serializer = AppointmentSerializer(appointment, data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
 # Delete an appointment
 @api_view(['DELETE'])
@@ -158,11 +158,11 @@ def deleteAppointment(request, appointment_id):
     try:
         appointment = Appointment.objects.get(appointmentId=appointment_id)
     except Appointment.DoesNotExist:
-        return JsonResponse({'error': 'Appointment not found'}, status=404)
+        return Response({'error': 'Appointment not found'}, status=404)
 
     if request.method == 'DELETE':
         appointment.delete()
-        return JsonResponse({'message': 'Appointment was deleted successfully!'}, status=204)
+        return Response({'message': 'Appointment was deleted successfully!'}, status=204)
     
     
     
