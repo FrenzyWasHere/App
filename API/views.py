@@ -40,6 +40,8 @@ def apiOverview(request):
          'url':'/appointments/<str:appointment_id>/delete/'},
         {'desc':'get appointments for a specific user',
          'url':'/user-appointments/<str:profileId>/'},
+        {'desc':'retrieve a specific doctor',
+         'url':'get-doctor/<str:doctorId>/'},
         
     ]
     return Response(api_urls)
