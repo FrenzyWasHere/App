@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+# from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profileID = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    # profileAge = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(120)])
+    # profileGender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')])
 
 class Doctor(models.Model):
     doctorId = models.UUIDField(default=uuid.uuid4, editable = False, unique = True, primary_key=True)
