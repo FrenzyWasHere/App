@@ -15,5 +15,5 @@ class Doctor(models.Model):
     doctorImage = models.ImageField(default="default.png", blank=True)
     
     def __str__(self):
-        return "Dr." + self.doctorName + self.doctorSpeciality
+        return "Dr. " + self.doctorName+ " " + self.doctorSpeciality
     
