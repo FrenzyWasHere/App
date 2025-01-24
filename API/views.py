@@ -2,9 +2,9 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Doctor,Profile
+from .models import Doctor,Profile, Appointment
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, DoctorSerializer
+from .serializers import UserSerializer, DoctorSerializer, AppointmentSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from django.shortcuts import get_object_or_404      
@@ -28,6 +28,16 @@ def apiOverview(request):
          'url':'/user-delete/<str:pk>/'},
         {'desc':'get the list of all doctors',
          'url':'/doctors/'},
+        {'desc':'create a new appointment',
+         'url':'/appointments/create/'},
+        {'desc':'list all appointments',
+         'url':'/appointments/'},
+        {'desc':'retrieve a specific appointment',
+         'url':'/appointment/<str:appointment_id>/'},
+        {'desc':'update an existing appointment',
+         'url':'/appointments/<str:appointment_id>/update/'},
+        {'desc':'delete an existing appointment',
+         'url':'/appointments/<str:appointment_id>/delete/'},
         
     ]
     return Response(api_urls)
@@ -90,3 +100,63 @@ def getDoctors(request):
     doctors = Doctor.objects.all()
     serializer = DoctorSerializer(doctors, many = True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def createAppointment(request):
+    data = JSONParser().parse(request)
+    serializer = AppointmentSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse(serializer.data, status=201)
+    return JsonResponse(serializer.errors, status=400)
+
+@api_view(['GET'])
+def listAppointments(request):
+    appointments = Appointment.objects.all()
+    serializer = AppointmentSerializer(appointments, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+# Retrieve a specific appointment by ID
+def getAppointment(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(appointmentId=appointment_id)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)
+
+    if request.method == 'GET':
+        serializer = AppointmentSerializer(appointment)
+        return JsonResponse(serializer.data)
+
+# Update an existing appointment
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def updateAppointment(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(appointmentId=appointment_id)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)
+
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = AppointmentSerializer(appointment, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+# Delete an appointment
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def deleteAppointment(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(appointmentId=appointment_id)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)
+
+    if request.method == 'DELETE':
+        appointment.delete()
+        return JsonResponse({'message': 'Appointment was deleted successfully!'}, status=204)

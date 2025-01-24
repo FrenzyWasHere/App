@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Profile, Doctor
+from .models import Profile, Doctor, Appointment
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,3 +25,8 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = ['doctorId', 'doctorName', 'doctorSpeciality', 'doctorExperience', 'doctorQualification', 'doctorImage']
+        
+class AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'

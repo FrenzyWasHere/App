@@ -24,3 +24,21 @@ class Doctor(models.Model):
 
 def __str__(self):
     return "Dr. " + self.doctorName+ " " + self.doctorSpeciality
+
+
+
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('completed', 'Completed'),
+        ('canceled', 'Canceled'),
+    ]
+
+    appointmentId = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    userProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    appointmentDateTime = models.DateTimeField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
+
+    def __str__(self):
+        return f"Appointment {self.appointmentId} with {self.doctor} on {self.appointmentDateTime}"
