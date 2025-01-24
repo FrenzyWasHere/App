@@ -119,6 +119,7 @@ def listAppointments(request):
     return JsonResponse(serializer.data, safe=False)
 
 # Retrieve a specific appointment by ID
+@api_view(['GET'])
 def getAppointment(request, appointment_id):
     try:
         appointment = Appointment.objects.get(appointmentId=appointment_id)
@@ -160,3 +161,14 @@ def deleteAppointment(request, appointment_id):
     if request.method == 'DELETE':
         appointment.delete()
         return JsonResponse({'message': 'Appointment was deleted successfully!'}, status=204)
+    
+    
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def userAppointments(request, profileId):
+    profile = Profile.objects.get(profileID = profileId)
+    appointments = Appointment.objects.filter(profile=profile)
+    serializer = AppointmentSerializer(appointments, many=True)
+    return Response(serializer.data)

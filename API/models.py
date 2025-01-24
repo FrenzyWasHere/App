@@ -35,7 +35,7 @@ class Appointment(models.Model):
     ]
 
     appointmentId = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    userProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     appointmentDateTime = models.DateTimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
