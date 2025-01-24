@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializer, DoctorSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404      
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 
@@ -40,29 +40,11 @@ def userList(request):
 
 @api_view(['POST'])
 def userCreate(request):
-    # data = JSONParser().parse(request)
-    # username = data.get('username')
-    # email = data.get('email')
-    # password = data.get('password')
-    # last_name = data.get('last_name')
-    # first_name = data.get('first_name')
-    # profileAge = data.get('profileAge')
-    # profileGender = data.get('profileGender')
-    # if not username or not password:
-    #         return JsonResponse({'error': 'Username and password are required.'})
-    # user = User.objects.create_user(username=username, password=password, email=email,last_name=last_name,first_name=first_name)
-    # profile = Profile.objects.create(user = user,profileAge = profileAge, profileGender=profileGender )
-    # token = Token.objects.create(user = user)
-    # return Response({"token":token.key,"user":user.username,"profile":profile.profileID})
-    serailizer = UserSerializer(data = request.data)
-    if serailizer.is_valid():
-        serailizer.save()
-        user = User.objects.get(username = request.data['username'])
-        user.set_password(request.data['password'])
-        user.save()
-        token = Token.objects.create(user = user)
-        return Response({"token":token.key,"user":serailizer.data})
-    return Response(serailizer.errors)
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def userLogin(request):
