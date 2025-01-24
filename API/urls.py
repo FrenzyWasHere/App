@@ -10,6 +10,7 @@ urlpatterns = [
     path('user-update/<str:pk>/', views.userUpdate, name="userUpdate"),
     path('user-delete/<str:pk>/', views.userDelete, name="userDelete"),
     path('doctors/', views.getDoctors, name="doctors"),
+    path('get-doctor/', views.getDoctor, name="get-doctor"),
     path('appointments/create/', views.createAppointment, name="createAppointment"),
     path('appointments/', views.listAppointments, name="list_appointments"),
     path('appointments/<str:appointment_id>/', views.getAppointment, name="getAppointment"),

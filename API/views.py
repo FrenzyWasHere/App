@@ -106,6 +106,14 @@ def getDoctors(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+def getDoctor(request,doctorId):
+    doctor = Doctor.objects.get(doctorId = doctorId)
+    serializer = DoctorSerializer(doctor, many = False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
 def createAppointment(request):
     data = JSONParser().parse(request)
     serializer = AppointmentSerializer(data=data)
