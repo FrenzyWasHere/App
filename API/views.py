@@ -38,6 +38,8 @@ def apiOverview(request):
          'url':'/appointments/<str:appointment_id>/update/'},
         {'desc':'delete an existing appointment',
          'url':'/appointments/<str:appointment_id>/delete/'},
+        {'desc':'get appointments for a specific user',
+         'url':'/user-appointments/<str:profileId>/'},
         
     ]
     return Response(api_urls)
@@ -169,6 +171,6 @@ def deleteAppointment(request, appointment_id):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 def userAppointments(request, profileId):
     profile = Profile.objects.get(profileID = profileId)
-    appointments = Appointment.objects.filter(profile=profile)
+    appointments = Appointment.objects.filter(userProfile=profile)
     serializer = AppointmentSerializer(appointments, many=True)
     return Response(serializer.data)
