@@ -41,7 +41,7 @@ def apiOverview(request):
         {'desc':'get appointments for a specific user',
          'url':'/user-appointments/<str:profileId>/'},
         {'desc':'retrieve a specific doctor',
-         'url':'get-doctor/<str:doctorId>/'},
+         'url':'/get-doctor/<str:doctorId>/'},
         
     ]
     return Response(api_urls)
