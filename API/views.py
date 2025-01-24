@@ -111,7 +111,7 @@ def getDoctors(request):
 def getDoctor(request,doctorId):
     doctor = Doctor.objects.get(doctorId = doctorId)
     serializer = DoctorSerializer(doctor, many = False)
-    return Response(serializer.data)
+    return Response(serializer.data,status=201)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -183,4 +183,4 @@ def userAppointments(request, profileId):
     profile = Profile.objects.get(profileID = profileId)
     appointments = Appointment.objects.filter(userProfile=profile)
     serializer = AppointmentSerializer(appointments, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=201)
