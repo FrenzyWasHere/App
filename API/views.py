@@ -61,7 +61,7 @@ def userCreate(request):
     else:
         print(serializer.errors)  # Log the errors for debugging
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def userLogin(request):
