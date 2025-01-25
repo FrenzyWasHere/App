@@ -17,4 +17,5 @@ urlpatterns = [
     path('appointments/<str:appointment_id>/update/', views.updateAppointment, name="updateAppointment"),
     path('appointments/<str:appointment_id>/delete/', views.deleteAppointment, name="deleteAppointment"),
     path('user-appointments/<str:profileId>/', views.userAppointments, name="userAppointments"),
+    path('profile/<str:profileId>/setImage/', views.setProfileImage, name="set_profile_image")
 ]

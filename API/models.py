@@ -8,6 +8,7 @@ class Profile(models.Model):
     profileID = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     profileAge = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(120)], blank = False, default = 0)
     profileGender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default = "M")
+    profileImage = models.ImageField(default="media/defaultUser.png", blank = True, upload_to="uploads/")
 
 
 def __str__(self):

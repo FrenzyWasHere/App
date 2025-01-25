@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Doctor,Profile, Appointment
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, DoctorSerializer, AppointmentSerializer
+from .serializers import UserSerializer, DoctorSerializer, AppointmentSerializer, ProfileSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from django.shortcuts import get_object_or_404      
@@ -42,6 +42,8 @@ def apiOverview(request):
          'url':'/user-appointments/<str:profileId>/'},
         {'desc':'retrieve a specific doctor',
          'url':'/get-doctor/<str:doctorId>/'},
+        {'desc':'set profile image',
+         'url':'profile/<str:profileId>/setImage/'}
         
     ]
     return Response(api_urls)
@@ -184,3 +186,22 @@ def userAppointments(request, profileId):
     appointments = Appointment.objects.filter(userProfile=profile)
     serializer = AppointmentSerializer(appointments, many=True)
     return Response(serializer.data, status=201)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+def setProfileImage(request, profileId):
+    try:
+        profile = Profile.objects.get(profileID=profileId)
+    except Profile.DoesNotExist:
+        return Response({'error': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    serializer = ProfileSerializer(profile, data = request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+    
+    

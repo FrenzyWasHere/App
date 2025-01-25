@@ -5,7 +5,7 @@ from .models import Profile, Doctor, Appointment
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['profileID', 'profileAge', 'profileGender']
+        fields = ['profileID', 'profileAge', 'profileGender','profileImage']
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
