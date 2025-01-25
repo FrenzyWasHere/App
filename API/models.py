@@ -10,8 +10,8 @@ class Profile(models.Model):
     profileGender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default = "M", blank=False)
     profileImage = models.ImageField(null=True, upload_to="uploads/")
 
-def __str__(self):
-    return str(self.user)
+    def __str__(self):
+        return str(self.user)
 
 class Doctor(models.Model):
     doctorId = models.UUIDField(default=uuid.uuid4, editable = False, unique = True, primary_key=True)
@@ -22,8 +22,8 @@ class Doctor(models.Model):
     doctorImage = models.ImageField(default="default.jpg", blank=True)
 
 
-def __str__(self):
-    return "Dr. " + self.doctorName+ " " + self.doctorSpeciality
+    def __str__(self):
+        return "Dr. " + self.doctorName+ " " + self.doctorSpeciality
 
 
 
