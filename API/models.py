@@ -7,8 +7,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profileID = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     profileAge = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(120)], blank = False, default = 0)
-    profileGender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default = "M")
-
+    profileGender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default = "M", blank=False)
+    profileImage = models.ImageField(null=True, upload_to="uploads/")
 
 def __str__(self):
     return str(self.user)
