@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'id', 'email', 'first_name', 'last_name', 'profile', 'current_password']
+        fields = ['username', 'id', 'email', 'first_name','password', 'last_name', 'profile', 'current_password']
         extra_kwargs = {'password': {'write_only': True, 'required': False}}
 
     def create(self, validated_data):
@@ -75,4 +75,4 @@ class DoctorSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = '__all__'
+        fields = '__all__'        
