@@ -14,36 +14,48 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'id', 'email', 'first_name', 'last_name', 'profile', 'current_password']
-        extra_kwargs = {'password': {'write_only': True, 'required': True}}  #Crucial change
+        fields = ['username', 'id', 'email', 'first_name', 'last_name', 'profile', 'password', 'current_password']
+        extra_kwargs = {
+            'password': {'write_only': True, 'required': True}
+        }
+
+    def create(self, validated_data):
+        profile_data = validated_data.pop('profile', None)
+        
+        # Ensure the password is present
+        password = validated_data.pop('password', None)
+        if not password:
+            raise serializers.ValidationError({'password': 'This field is required.'})
+
+        user = User(**validated_data)
+        user.set_password(password)  # Hash the password
+        user.save()
+
+        if profile_data:
+            Profile.objects.create(user=user, **profile_data)  # Create the profile linked to the user
+
+        return user
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile', None)
         current_password = validated_data.pop('current_password', None)
 
-        # Check if the current password is correct (Crucial check)
         if current_password:
             if not check_password(current_password, instance.password):
                 raise serializers.ValidationError({'current_password': 'Incorrect password.'})
 
-        # Important:  Don't update password unless it was sent
-        # and don't allow updating password without current password
         if 'password' in validated_data and current_password is None:
-           raise serializers.ValidationError({'password': 'Must provide current password to change.'})
+            raise serializers.ValidationError({'password': 'Must provide current password to change.'})
 
-        # Update user fields
         for field, value in validated_data.items():
             if field in ['username', 'email', 'first_name', 'last_name'] and value is not None:
                 setattr(instance, field, value)
 
-        # Update password if provided and current password was checked
         if 'password' in validated_data and current_password:
-           instance.set_password(validated_data['password'])
-
+            instance.set_password(validated_data['password'])
 
         instance.save()
 
-        # Update profile fields
         if profile_data:
             try:
                 profile = instance.profile
@@ -51,9 +63,10 @@ class UserSerializer(serializers.ModelSerializer):
                     setattr(profile, attr, value)
                 profile.save()
             except AttributeError:
-                raise serializers.ValidationError({'profile': 'Profile not found'})  # Handle missing profile
+                raise serializers.ValidationError({'profile': 'Profile not found'})
 
         return instance
+
 
 
 # ... (other serializers)
